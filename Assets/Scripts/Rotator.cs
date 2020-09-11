@@ -3,13 +3,37 @@ using System.Collections;
 
 public class Rotator : MonoBehaviour
 {
+    private Rigidbody rb;
+    private float acc;
+    private float time;
+    private float max;
+    private Vector3 move;
 
-    // Before rendering each frame..
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        acc = 2f;
+        max = 5f;
+    }
     void Update()
     {
-        // Rotate the game object that this script is attached to by 15 in the X axis,
-        // 30 in the Y axis and 45 in the Z axis, multiplied by deltaTime in order to make it per second
-        // rather than per frame.
-        transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
+        time -= Time.deltaTime;
+        if (time <= 0)
+        {
+            move = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+            time += acc;
+        }
+
+        transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);        
+    }
+
+    void OnTriggerEnter()
+    {
+        move.x = move.x * -1;
+    }
+
+    void FixedUpdate()
+    {
+        rb.AddForce(move * max);
     }
 }
